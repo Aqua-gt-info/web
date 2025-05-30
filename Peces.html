@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Peces en Venta | AQUA-GT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+    
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #124f7e;
+    }
+    header {
+      background: #001427;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    .filtros {
+      max-width: 1200px;
+      margin: 30px auto 0;
+      text-align: center;
+      gap: 20px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .filtros button {
+      background: #007BFF;
+      border: none;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .filtros button:hover,
+    .filtros button.active {
+      background: #0056b3;
+    }
+    .contenedor-productos {
+      max-width: 1200px;
+      margin: 40px auto 60px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      align-items: stretch;
+    }
+    .producto {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      text-align: center;
+    }
+    .producto img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .producto h3 {
+      font-size: 1.2rem;
+      color: #001427;
+      margin: 10px 0;
+      min-height: 3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Asegura la clase precio para detectar el precio */
+    .producto p.precio {
+      font-weight: bold;
+      color: #007BFF;
+      margin: 0 0 10px;
+      min-height: 1.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .producto button {
+      margin-top: auto;
+      background: #007BFF;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.3s ease;
+    }
+    .producto button:hover {
+      background: #0056b3;
+    }
+    /* Estilo para el carrito */
+    #carrito-icono {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #007BFF;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000;
+    }
+    #contador-carrito {
+      font-size: 0.8rem;
+      background: red;
+      padding: 2px 6px;
+      border-radius: 10px;
+      position: absolute;
+      top: -5px;
+      right: -5px;
+    }
+    #modal-carrito {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 350px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 999;
+    }
+    #lista-carrito {
+      list-style: none;
+      padding: 0;
+    }
+    #lista-carrito li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    #lista-carrito button.eliminar {
+      background: #dc3545;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+ 
+  <body>
+
+  <header>
+    <h1>Peces en Venta</h1>
+  </header>
+
+
+
+  <!------------------------------------------------ Botones para filtro ----------------------------------------------------------------------------------------->
+
+
+  <div class="filtros">
+    <button type="button" class="active" data-categoria="todos">Todos</button>
+    <button type="button" data-categoria="tropical">Peces Tropicales</button>
+    <button type="button" data-categoria="japones">Peces Japoneses</button>
+    <button type="button" data-categoria="Ofertas y Promociones">Ofertas y Promociones</button>
+  <button onclick="window.location.href='index.html';"
+    style="background:#28a745; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">
+    Volver al Inicio
+  </button>
+</div>
+
+
+  </div>
+
+
+
+  <section class="contenedor-productos">
+
+
+    <!---------------------------------------------------------- Productos Tropicales --------------------------------------------------------------------------------------->
+
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/escalar-silver1-cd6c207949ea70526715930492174886-1024-1024-removebg-preview (1).png" alt="Guppy" />
+  <h3>Pez Guppy</h3>
+  <p class="precio">Q18.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/pez-guppy-acuarioland-removebg-preview (1).png" alt="Escalares" />
+  <h3>Escalares Mixto</h3>
+  <p class="precio">Q18.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/moja-removebg-preview (1).png" alt="Tetra Monja" />
+  <h3>Tetra Monja</h3>
+  <p class="precio">Q8.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/molly-negro11-bca52c648702ce282416911778032991-1024-1024-removebg-preview (1).png" alt="Molly Negro" />
+  <h3>Molly Negro (paquete 3 unidades)</h3>
+  <p class="precio">Q10.00 c/u (3 unidades)</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/pez-molly-removebg-preview (1).png" alt="Molly Blanco" />
+  <h3>Molly Blanco (paquete 3 unidades)</h3>
+  <p class="precio">Q10.00 x (3 unidades)</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/poecilia-latipinna-molly-ballon-lyra-gold-removebg-preview (1).png" alt="Molly Balón" />
+  <h3>Molly Balón</h3>
+  <p class="precio">Q8.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/platy-removebg-preview (1).png" alt="Platy" />
+  <h3>Platy (paquete 3 unidades)</h3>
+  <p class="precio">Q10.00 c/u (3 unidades)</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/El-pez-neOn-1200x900-removebg-preview (1).png" alt="Tetra Neon" />
+  <h3>Tetra Neon</h3>
+  <p class="precio">No Disponible</p>
+  <button disabled style="cursor:not-allowed; opacity:0.5;"><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/unnamed-removebg-preview (2).png" alt="Cebra" />
+  <h3>Cebra</h3>
+  <p class="precio">Q4.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/images-removebg-preview (2).png" alt="Cebra Transgenica" />
+  <h3>Cebra Transgenica</h3>
+  <p class="precio">Q5.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/images-removebg-preview (3).png" alt="Barbo Tetrazona (Tigre)" />
+  <h3>Barbo Tetrazona (Tigre)</h3>
+  <p class="precio">Q6.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/barbon_sumatrano_de_color-removebg-preview (1).png" alt="Barbo Tetrazona (transgénico Rosa)" />
+  <h3>Barbo Tetrazona (transgénico Rosa)</h3>
+  <p class="precio">Q8.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/5555-removebg-preview (1).png" alt="Barbo Tetrazona (transgénico Verde)" />
+  <h3>Barbo Tetrazona (transgénico Verde)</h3>
+  <p class="precio">Q8.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/444-removebg-preview (1).png" alt="Barbo Rosa" />
+  <h3>Barbo Rosa</h3>
+  <p class="precio">Q6.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="tropical">
+  <img src="img/espada-removebg-preview.png" alt="Espada" />
+  <h3>Espada</h3>
+  <p class="precio">Q5.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+
+
+<!-- ---------------------------------------------------------------------Productos Japoneses -------------------------------------------------------------------------------->
+<div class="producto" data-categoria="japones">
+  <img src="img/koi-removebg-preview (1).png" alt="Pez Koi" />
+  <h3>Pez Koi</h3>
+  <p class="precio">Q15.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/cometa-removebg-preview (2).png" alt="Pez Cometa" />
+  <h3>Pez Cometa</h3>
+  <p class="precio">Q15.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/moro-removebg-preview (1).png" alt="Moro Telescopio" />
+  <h3>Moro Telescopio</h3>
+  <p class="precio">Q15.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/calico-removebg-preview (1).png" alt="Calico" />
+  <h3>Pez Calico</h3>
+  <p class="precio">Q15.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/oranda-goldfish-removebg-preview (1).png" alt="Pez Oranda" />
+  <h3>Pez Oranda</h3>
+  <p class="precio">Q80.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/Pearlscale-Goldfish-101-La-guia-de-cuidados-esenciales-removebg-preview.png" alt="Escama Perla" />
+  <h3>Escama Perla</h3>
+  <p class="precio">Q20.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/peces-removebg-preview (1).png" alt="Red Cap" />
+  <h3>Red Cap</h3>
+  <p class="precio">Q25.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+<div class="producto" data-categoria="japones">
+  <img src="img/shubunkin_-_var_3-removebg-preview.png" alt="Shubunki" />
+  <h3>Pez Shubunkin</h3>
+  <p class="precio">Q80.00</p>
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+</div>
+
+
+<!--------------------------------------------------------------------------- Ofertas y Promociones ---------------------------------------------------------------------->
+<div class="producto" data-categoria="Ofertas y Promociones">
+  <img src="img/Betta-Cola-de-Corona-removebg-preview.png" alt="Pez Betta" />
+  <h3>Betta Cola de Corona</h3>
+  <p class="precio">Q95.00</p>
+  <button class="add-to-cart" data-nombre="Pez Betta" data-precio="95.00">Agregar al carrito</button>
+</div>
+
+
+
+
+  </section>
+
+  </body>
+<!---------------------------------------------------------------------------- ICONO DEL CARRITO ---------------------------------------------------------------------------->
+<div id="carrito-icono">
+  <i class="fas fa-shopping-cart"></i>
+  <span id="contador-carrito">0</span>
+</div>
+
+
+<!---------------------------------------------------------------------------- MODAL DEL CARRITO ---------------------------------------------------------------------------->
+<div id="modal-carrito" style="display:none;">
+  <h2>Tu Carrito</h2>
+  <ul id="lista-carrito"></ul>
+  <hr>
+  <p style="font-weight:bold;">Total: Q<span id="total-carrito">0.00</span></p>
+
+  <!-------------------------------------------------------------------------- Nombre del cliente --------------------------------------------------------------------------->
+  <label for="nombreCliente">Tu nombre:</label>
+  <input type="text" id="nombreCliente" placeholder="Escribe tu nombre"
+         style="margin-bottom:10px;display:block;width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+
+<!-- Botón: Finalizar pedido -->
+<button onclick="enviarPedidoPorWhatsApp()"
+        style="margin-top:10px;background:#28a745;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Finalizar pedido por WhatsApp
+</button>
+
+<!-- Botón: Vaciar carrito -->
+<button id="boton-vaciar-carrito"
+        style="margin-top:10px;background:#001427;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Vaciar carrito
+</button>
+
+<!-- Botón: Cerrar -->
+<button onclick="cerrarCarrito()"
+        style="margin-top:10px;background:#dc3545;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Cerrar
+</button>
+</div>
+  <!-- ESTILOS DEL MODAL Y CARRITO -->
+  <style>
+  #lista-carrito li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .detalle-producto {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .nombre-producto {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  .botones-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .botones-cantidad button {
+    background: #f0f0f0;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .precio-item {
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  .boton-eliminar {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+
+  </style>
+
+<script>
+    
+
+/* -------------------------------------------------------------------------  FILTRO DE CATEGORÍAS  ---------- */
+const botonesFiltro = document.querySelectorAll('.filtros button');
+const productos     = document.querySelectorAll('.producto');
+
+botonesFiltro.forEach(btn => {
+  btn.addEventListener('click', () => {
+    botonesFiltro.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cat = btn.getAttribute('data-categoria');
+    productos.forEach(prod => {
+      const catProd = prod.getAttribute('data-categoria');
+      prod.style.display = (cat === 'todos' || cat === catProd) ? 'flex' : 'none';
+    });
+  });
+});
+
+/* ----------  CARRITO  ---------- */
+const carritoIcono      = document.getElementById('carrito-icono');
+const modalCarrito      = document.getElementById('modal-carrito');
+const listaCarrito      = document.getElementById('lista-carrito');
+const totalCarritoSpan  = document.getElementById('total-carrito');
+const contadorCarrito   = document.getElementById('contador-carrito');
+const nombreClienteIn   = document.getElementById('nombreCliente');
+
+let carrito = [];
+
+// Cargar carrito guardado en localStorage
+function cargarCarrito() {
+  const carritoGuardado = localStorage.getItem('carrito');
+  if (carritoGuardado) {
+    carrito = JSON.parse(carritoGuardado);
+  } else {
+    carrito = [];
+  }
+  actualizarCarrito();
+}
+
+// Guardar carrito en localStorage
+function guardarCarrito() {
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+/* Agregar al carrito */
+document.querySelectorAll('.producto button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const prod = btn.closest('.producto');
+    const nombre = prod.querySelector('h3').textContent.trim();
+    const precio = parseFloat(
+      prod.querySelector('.precio').textContent.replace(/[^\d.]/g, '')
+    );
+
+    const item = carrito.find(p => p.nombre === nombre);
+    if (item) {
+      item.cantidad++;
+    } else {
+      carrito.push({ nombre, precio, cantidad: 1 });
+    }
+    actualizarCarrito();
+    guardarCarrito();
+  });
+});
+
+
+document.getElementById('boton-vaciar-carrito').addEventListener('click', function () {
+  if (carrito.length === 0) {
+    alert('El carrito ya está vacío');
+    return;
+  }
+
+  if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+    carrito = []; // Vacía el arreglo
+    actualizarCarrito(); // Refresca el DOM
+    localStorage.removeItem('carrito'); // Limpia el localStorage
+  }
+});
+
+/* Mostrar / ocultar modal */
+carritoIcono.addEventListener('click', () => modalCarrito.style.display = 'block');
+function cerrarCarrito() { modalCarrito.style.display = 'none'; }
+
+/* Actualizar listado */
+function actualizarCarrito() {
+  listaCarrito.innerHTML = '';
+  let total = 0;
+
+  carrito.forEach((item, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class="detalle-producto">
+        <span class="nombre-producto" title="${item.nombre}">${item.nombre}</span>
+      </div>
+      <div class="botones-cantidad">
+        <button onclick="disminuirCantidad(${i})">−</button>
+        <span class="cantidad">x${item.cantidad}</span>
+        <button onclick="aumentarCantidad(${i})">+</button>
+      </div>
+      <span class="precio-item">Q${(item.precio * item.cantidad).toFixed(2)}</span>
+      <button class="boton-eliminar" onclick="eliminarDelCarrito(${i})">X</button>
+    `;
+    listaCarrito.appendChild(li);
+    total += item.precio * item.cantidad;
+  });
+
+  totalCarritoSpan.textContent = total.toFixed(2);
+  contadorCarrito.textContent = carrito.reduce((s, i) => s + i.cantidad, 0);
+  guardarCarrito();
+}
+
+/* Botones +  −  X */
+function aumentarCantidad(i) {
+  carrito[i].cantidad++;
+  actualizarCarrito();
+}
+function disminuirCantidad(i) {
+  carrito[i].cantidad--;
+  if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+  actualizarCarrito();
+}
+function eliminarDelCarrito(i) {
+  carrito.splice(i, 1);
+  actualizarCarrito();
+}
+
+/* Enviar a WhatsApp */
+function enviarPedidoPorWhatsApp() {
+  if (carrito.length === 0) {
+    alert('Tu carrito está vacío');
+    return;
+  }
+
+  const nombreCliente = nombreClienteIn.value.trim();
+  if (!nombreCliente) {
+    alert('Por favor ingresa tu nombre');
+    return;
+  }
+
+  let msg = `*Pedido de ${nombreCliente}:*%0A`;
+  carrito.forEach(it => {
+    msg += `- ${it.nombre} x${it.cantidad} (Q${(it.precio * it.cantidad).toFixed(2)})%0A`;
+  });
+  msg += `%0A*Total:* Q${totalCarritoSpan.textContent}`;
+
+  const numero = '502XXXXXXXX'; // Reemplaza con tu número
+  window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+
+  // Limpia
+  carrito = [];
+  actualizarCarrito();
+  cerrarCarrito();
+  nombreClienteIn.value = '';
+  localStorage.removeItem('carrito');
+}
+
+// Cargar carrito al iniciar la página
+cargarCarrito();
+</script>
+
+
