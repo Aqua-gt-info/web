@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pez Betta Velo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: url('../img/fondo-acuario.png') no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* oscurece el fondo */
+  z-index: -1;
+}
+
+    .container {
+      background-color: #ffffff;
+      width: 90%;
+      max-width: 1000px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      padding: 30px;
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .info {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    .info h1 {
+      color: #007BFF;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      color: #28a745;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .features h2 {
+      font-size: 1.2rem;
+      border-bottom: 2px solid #007BFF;
+      display: inline-block;
+      padding-bottom: 5px;
+      margin-bottom: 10px;
+    }
+
+    .features ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .features li {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+.image-container {
+  flex: 1.2; /* Aumenta ligeramente su proporción respecto a .info */
+  min-width: 300px; /* Un poco más ancho */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fish-image {
+  width: 100%;
+  max-width: 500px; /* Aumenta de 400px a 500px */
+  border-radius: 15px;
+  object-fit: cover; /* Asegura que llene el espacio sin deformarse */
+}
+
+    .boton-principal {
+  display: inline-block;
+  background-color: #007BFF;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  transition: background-color 0.3s;
+  min-width: 180px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+.boton-principal:hover {
+  background-color: #0056b3;
+}
+
+
+    .back-button {
+      display: inline-block;
+      margin-top: 3px;
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background-color .3s;
+    }
+
+    .back-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Botón carrito arriba a la derecha */
+ #carrito-icono {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe); /* Degradado moderno */
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 1.3rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#carrito-icono:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+    #contador-carrito {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: red;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
+#modal-carrito {
+  position: fixed;
+  top: 0;
+  right: -100%; /* Inicialmente oculto fuera de la pantalla */
+  height: 100%;
+  width: 350px;
+  max-width: 90%;
+  background: white;
+  padding: 20px;
+  border-left: 3px solid #007BFF;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.2);
+  z-index: 2000;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+}
+
+#modal-carrito.abierto {
+  right: 0; /* Se desliza dentro de la vista */
+}
+
+    #modal-carrito h2 {
+      margin-top: 0;
+      color: #007BFF;
+    }
+
+    #lista-carrito li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .detalle-producto {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .nombre-producto {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+    }
+
+    .botones-cantidad {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .botones-cantidad button {
+      background: #f0f0f0;
+      border: none;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .precio-item {
+      font-weight: 600;
+      white-space: nowrap;
+      min-width: 60px;
+      text-align: right;
+    }
+
+    .boton-eliminar {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    @media screen and (max-width: 768px) {
+      .container {
+        flex-direction: column-reverse;
+        text-align: center;
+      }
+      .info h1 {
+        text-align: center;
+      }
+      .features ul {
+        text-align: left;
+      }
+      .back-button {
+        margin: 20px auto 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Botón carrito -->
+  <button id="carrito-icono" aria-label="Ver carrito">
+    🛒
+    <span id="contador-carrito">0</span>
+  </button>
+
+  <div class="container producto" data-categoria="Tetra Pond ">
+    <div class= "info">
+      <h1>Tetra Pond</h1>
+      <p class="price">Q95.00</p>
+
+      <div class="features">
+        <h2>Características:</h2>
+        <ul>
+          <li>Color vibrante y elegante forma de cola</li>
+          <li>Ideal para acuarios pequeños</li>
+          <li>Temperamento territorial (uno por acuario)</li>
+          <li>Fácil de cuidar, excelente para principiantes</li>
+          <li>Alimentación: comida seca y viva</li>
+          <li>Esperanza de vida: 2 a 3 años</li>
+        </ul>
+      </div>
+
+      
+      <button class="boton-principal">Agregar al carrito</button>
+
+
+
+      <a href="Alimentos.html" class="back-button">← Volver a Peces</a>
+    </div>
+
+    <div class="image-container">
+      <img src="../img/tetrapoun.png" alt="Pez Betta" class="fish-image" />
+    </div>
+  </div>
+
+  <!-- MODAL DEL CARRITO -->
+  <div id="modal-carrito">
+    <h2>Tu Carrito</h2>
+    <ul id="lista-carrito"></ul>
+    <hr>
+    <p style="font-weight:bold;">Total: Q<span id="total-carrito">0.00</span></p>
+
+    <label for="nombreCliente">Tu nombre:</label>
+    <input type="text" id="nombreCliente" placeholder="Escribe tu nombre"
+      style="margin-bottom:10px;display:block;width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+
+    <button onclick="enviarPedidoPorWhatsApp()"
+      style="margin-top:10px;background:#28a745;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+      Finalizar pedido por WhatsApp
+    </button>
+
+    <button id="boton-vaciar-carrito"
+      style="margin-top:10px;background:#001427;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+      Vaciar carrito
+    </button>
+
+    <button onclick="cerrarCarrito()"
+      style="margin-top:10px;background:#dc3545;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+      Cerrar
+    </button>
+  </div>
+
+  <script>
+  /* ---------- CARRITO ---------- */
+  const carritoIcono = document.getElementById('carrito-icono');
+  const modalCarrito = document.getElementById('modal-carrito');
+  const listaCarrito = document.getElementById('lista-carrito');
+  const totalCarritoSpan = document.getElementById('total-carrito');
+  const contadorCarrito = document.getElementById('contador-carrito');
+  const nombreClienteIn = document.getElementById('nombreCliente');
+  const botonVaciar = document.getElementById('boton-vaciar-carrito');
+
+  let carrito = [];
+
+  // Cargar carrito guardado en localStorage
+  function cargarCarrito() {
+    const carritoGuardado = localStorage.getItem('carrito');
+    if (carritoGuardado) {
+      carrito = JSON.parse(carritoGuardado);
+    } else {
+      carrito = [];
+    }
+    actualizarCarrito();
+  }
+
+  // Guardar carrito en localStorage
+  function guardarCarrito() {
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+  }
+
+  // Agregar al carrito
+  document.querySelectorAll('.producto button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const prod = btn.closest('.producto');
+      const nombre = prod.querySelector('h1').textContent.trim();
+      const precio = parseFloat(
+        prod.querySelector('.price').textContent.replace(/[^\d.]/g, '')
+      );
+
+      // Buscamos si el producto ya está en el carrito
+      const item = carrito.find(p => p.nombre === nombre);
+      if (item) {
+        item.cantidad++;
+      } else {
+        carrito.push({ nombre, precio, cantidad: 1 });
+      }
+      actualizarCarrito();
+      guardarCarrito();
+    });
+  });
+
+  botonVaciar.addEventListener('click', function () {
+    if (carrito.length === 0) {
+      alert('El carrito ya está vacío');
+      return;
+    }
+
+    if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+      carrito = [];
+      actualizarCarrito();
+      localStorage.removeItem('carrito');
+    }
+  });
+
+  // Mostrar / ocultar modal
+ 
+ function cerrarCarrito() {
+  modalCarrito.classList.remove('abierto');
+}
+
+  // Actualizar listado del carrito en el modal y contador
+  function actualizarCarrito() {
+    listaCarrito.innerHTML = '';
+    let total = 0;
+
+    carrito.forEach((item, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div class="detalle-producto">
+          <span class="nombre-producto" title="${item.nombre}">${item.nombre}</span>
+        </div>
+        <div class="botones-cantidad">
+          <button onclick="disminuirCantidad(${i})">−</button>
+          <span class="cantidad">x${item.cantidad}</span>
+          <button onclick="aumentarCantidad(${i})">+</button>
+        </div>
+        <span class="precio-item">Q${(item.precio * item.cantidad).toFixed(2)}</span>
+        <button class="boton-eliminar" onclick="eliminarDelCarrito(${i})">X</button>
+      `;
+      listaCarrito.appendChild(li);
+      total += item.precio * item.cantidad;
+    });
+
+    totalCarritoSpan.textContent = total.toFixed(2);
+    contadorCarrito.textContent = carrito.reduce((s, i) => s + i.cantidad, 0);
+    guardarCarrito();
+  }
+
+  // Botones para cambiar cantidades y eliminar
+  function aumentarCantidad(i) {
+    carrito[i].cantidad++;
+    actualizarCarrito();
+  }
+  function disminuirCantidad(i) {
+    carrito[i].cantidad--;
+    if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+    actualizarCarrito();
+  }
+  function eliminarDelCarrito(i) {
+    carrito.splice(i, 1);
+    actualizarCarrito();
+  }
+
+  // Enviar pedido por WhatsApp
+  function enviarPedidoPorWhatsApp() {
+    if (carrito.length === 0) {
+      alert('Tu carrito está vacío');
+      return;
+    }
+
+    const nombreCliente = nombreClienteIn.value.trim();
+    if (!nombreCliente) {
+      alert('Por favor ingresa tu nombre');
+      return;
+    }
+
+    let msg = `*Pedido de ${nombreCliente}:*%0A`;
+    carrito.forEach(it => {
+      msg += `- ${it.nombre} x${it.cantidad} (Q${(it.precio * it.cantidad).toFixed(2)})%0A`;
+    });
+    msg += `%0ATotal: Q${carrito.reduce((total, it) => total + it.precio * it.cantidad, 0).toFixed(2)}`;
+
+    // Cambia el número aquí al que enviarás el mensaje
+    const telefono = "50212345678"; 
+
+    window.open(`https://wa.me/${telefono}?text=${msg}`, '_blank');
+  }
+
+  // Inicializar carrito al cargar la página
+  cargarCarrito();
+
+  const icono = document.getElementById('carrito-icono');
+icono.classList.add('agregado');
+setTimeout(() => icono.classList.remove('agregado'), 300);
+
+carritoIcono.addEventListener('click', () => {
+  modalCarrito.classList.add('abierto');
+});
+function cerrarCarrito() {
+  modalCarrito.classList.remove('abierto');
+}
+</script>

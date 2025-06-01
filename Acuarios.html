@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Peces en Venta | AQUA-GT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+    
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('img/fondo-acuario.png');
+  background-size: cover;
+  background-attachment: fixed;
+  position: relative;
+  z-index: 0;
+}
+
+
+    header {
+      position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #001427;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  z-index: 1500; /* <-- Este valor es mayor que el z-index de los productos */
+}  
+    
+    .filtros button:hover,
+    .filtros button.active {
+      background: #0056b3;
+    }
+    .contenedor-productos {
+      max-width: 1200px;
+      margin: 200px auto 60px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      align-items: stretch;
+    }
+    .producto {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+    .producto img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .producto h3 {
+      font-size: 1.2rem;
+      color: #001427;
+      margin: 10px 0;
+      min-height: 3em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Asegura la clase precio para detectar el precio */
+    .producto p.precio {
+      font-weight: bold;
+      color: #007BFF;
+      margin: 0 0 10px;
+      min-height: 1.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .producto button {
+      margin-top: auto;
+      background: #007BFF;
+      border: none;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      transition: background 0.3s ease;
+      
+    }
+    .producto button:hover {
+  background: #0056b3;
+}
+
+    .producto:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+    
+    .producto button:hover {
+   transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  z-index: 10; /* está bien siempre que sea menor que el del header */
+}
+    /* Estilo para el carrito */
+#carrito-icono {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #4facfe, #00f2fe); /* Degradado moderno */
+  color: white;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 2000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 1.3rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#carrito-icono:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+}
+
+#carrito-icono.agregado {
+  animation: rebote 0.3s;
+}
+
+@keyframes rebote {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+    #contador-carrito {
+      font-size: 0.8rem;
+      background: red;
+      padding: 2px 6px;
+      border-radius: 10px;
+      position: absolute;
+      top: -5px;
+      right: -5px;
+    }
+    #modal-carrito {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 350px;
+      height: 100vh;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+      padding: 20px;
+      overflow-y: auto;
+      z-index: 2000;
+    }
+    #lista-carrito {
+      list-style: none;
+      padding: 0;
+    }
+    #lista-carrito li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    #lista-carrito button.eliminar {
+      background: #dc3545;
+      border: none;
+      color: white;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+.filtros {
+  max-width: 900px;
+  margin: 50px auto 0;
+   position: fixed;
+  top: 75px; /* Ajusta si tienes un header arriba, cambia a 0 si no tienes */
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  gap: 15px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 10;
+  justify-content: flex-start;
+  scrollbar-width: none;
+}
+
+
+.filtros::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+@media (min-width: 768px) {
+  .filtros {
+    justify-content: center; /* Centra los botones en pantallas grandes */
+    flex-wrap: wrap;         /* Permite que salten de línea si no caben */
+    overflow-x: unset;       /* Quita el scroll horizontal */
+  }
+}
+
+.filtros button {
+  flex: 0 0 auto;
+  font-size: 14px;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  color: #333;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.filtros button.active {
+  background: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.filtros .btn-volver {
+  background: #28a745;
+  color: white;
+  border: none;
+}
+
+.botones-producto {
+  display: flex;
+  flex-direction: column;
+  gap: 6px; /* espacio entre botones */
+  margin-top: 8px;
+  align-items: stretch; /* opcional: hace que los botones llenen el ancho */
+}
+
+.botones-producto button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.botones-producto button i {
+  margin-right: 6px;
+}
+
+.botones-producto button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.botones-producto button.info {
+  background-color: #007bff;
+  color: white;
+}
+.botones-producto a.info {
+  background-color: #007BFF;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  border: none;
+  transition: background-color 0.3s;
+}
+
+.botones-producto a.info:hover {
+  background-color: #0056b3;
+}
+
+ 
+  </style>
+</head>
+ 
+  <body>
+
+  <header>
+    <h1>Peces en Venta</h1>
+  </header>
+
+
+
+  <!------------------------------------------------ Botones para filtro ----------------------------------------------------------------------------------------->
+
+
+  <div class="filtros">
+    <button type="button" class="active" data-categoria="todos">Todos</button>
+    <button type="button" data-categoria="Pecera pequeña">Pecera pequeña</button>
+    <button type="button" data-categoria="Pecera Mediana">Pecera Mediana</button>
+    <button type="button" data-categoria="Pecera Grande">Pecera Grande</button>
+    <button type="button" data-categoria="Ofertas y Promociones">Ofertas y Promociones</button>
+  <button onclick="window.location.href='index.html';"
+    style="background:#28a745; color:white; padding:10px 20px; border:none; border-radius:5px; cursor:pointer;">
+    Volver al Inicio
+  </button>
+</div>
+
+
+
+
+  <section class="contenedor-productos">
+
+
+    <!---------------------------------------------------------- Productos Tropicales --------------------------------------------------------------------------------------->
+
+
+<div class="producto" data-categoria="Pecera pequeña">
+  <img src="img/" alt="Acuario 1" />
+  <h3>Acuario 1</h3>
+  <p class="precio">Q0.00</p>
+
+<div class="botones-producto">
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+  <a href="peces/bettacorona.html" class="info"><i class="fas fa-info-circle"></i> Información</a>
+</div>
+</div>
+
+<div class="producto" data-categoria="Pecera Mediana">
+  <img src="img/" alt="Acuario 1" />
+  <h3>Acuario 2</h3>
+  <p class="precio">Q0.00</p>
+
+<div class="botones-producto">
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+  <a href="peces/bettacorona.html" class="info"><i class="fas fa-info-circle"></i> Información</a>
+</div>
+</div>
+
+
+
+<!--------------------------------------------------------------------------- Ofertas y Promociones ---------------------------------------------------------------------->
+<div class="producto" data-categoria="Ofertas y Promociones">
+  <img src="img/" alt="Acuario 1" />
+  <h3>Acuario 3</h3>
+  <p class="precio">Q0.00</p>
+
+<div class="botones-producto">
+  <button><i class="fas fa-cart-plus"></i> Agregar al carrito</button>
+  <a href="peces/bettacorona.html" class="info"><i class="fas fa-info-circle"></i> Información</a>
+</div>
+</div>
+
+  </section>
+
+  </body>
+<!---------------------------------------------------------------------------- ICONO DEL CARRITO ---------------------------------------------------------------------------->
+<div id="carrito-icono">
+  🛒
+  <span id="contador-carrito">3</span>
+</div>
+
+<!---------------------------------------------------------------------------- MODAL DEL CARRITO ---------------------------------------------------------------------------->
+<div id="modal-carrito" style="display:none;">
+  <h2>Tu Carrito</h2>
+  <ul id="lista-carrito"></ul>
+  <hr>
+  <p style="font-weight:bold;">Total: Q<span id="total-carrito">0.00</span></p>
+
+  <!-------------------------------------------------------------------------- Nombre del cliente --------------------------------------------------------------------------->
+  <label for="nombreCliente">Tu nombre:</label>
+  <input type="text" id="nombreCliente" placeholder="Escribe tu nombre"
+         style="margin-bottom:10px;display:block;width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+
+<!-- Botón: Finalizar pedido -->
+<button onclick="enviarPedidoPorWhatsApp()"
+        style="margin-top:10px;background:#28a745;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Finalizar pedido por WhatsApp
+</button>
+
+<!-- Botón: Vaciar carrito -->
+<button id="boton-vaciar-carrito"
+        style="margin-top:10px;background:#001427;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Vaciar carrito
+</button>
+
+<!-- Botón: Cerrar -->
+<button onclick="cerrarCarrito()"
+        style="margin-top:10px;background:#dc3545;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Cerrar
+</button>
+</div>
+  <!-- ESTILOS DEL MODAL Y CARRITO -->
+  <style>
+  #lista-carrito li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .detalle-producto {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+  .nombre-producto {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+  }
+
+  .botones-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .botones-cantidad button {
+    background: #f0f0f0;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .precio-item {
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  .boton-eliminar {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+
+  </style>
+
+<script>
+    
+
+/* -------------------------------------------------------------------------  FILTRO DE CATEGORÍAS  ---------- */
+const botonesFiltro = document.querySelectorAll('.filtros button');
+const productos     = document.querySelectorAll('.producto');
+
+botonesFiltro.forEach(btn => {
+  btn.addEventListener('click', () => {
+    botonesFiltro.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cat = btn.getAttribute('data-categoria');
+    productos.forEach(prod => {
+      const catProd = prod.getAttribute('data-categoria');
+      prod.style.display = (cat === 'todos' || cat === catProd) ? 'flex' : 'none';
+    });
+  });
+});
+
+/* ----------  CARRITO  ---------- */
+const carritoIcono      = document.getElementById('carrito-icono');
+const modalCarrito      = document.getElementById('modal-carrito');
+const listaCarrito      = document.getElementById('lista-carrito');
+const totalCarritoSpan  = document.getElementById('total-carrito');
+const contadorCarrito   = document.getElementById('contador-carrito');
+const nombreClienteIn   = document.getElementById('nombreCliente');
+
+let carrito = [];
+
+// Cargar carrito guardado en localStorage
+function cargarCarrito() {
+  const carritoGuardado = localStorage.getItem('carrito');
+  if (carritoGuardado) {
+    carrito = JSON.parse(carritoGuardado);
+  } else {
+    carrito = [];
+  }
+  actualizarCarrito();
+}
+
+// Guardar carrito en localStorage
+function guardarCarrito() {
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+/* Agregar al carrito */
+document.querySelectorAll('.producto button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const prod = btn.closest('.producto');
+    const nombre = prod.querySelector('h3').textContent.trim();
+    const precio = parseFloat(
+      prod.querySelector('.precio').textContent.replace(/[^\d.]/g, '')
+    );
+
+    const item = carrito.find(p => p.nombre === nombre);
+    if (item) {
+      item.cantidad++;
+    } else {
+      carrito.push({ nombre, precio, cantidad: 1 });
+    }
+    actualizarCarrito();
+    guardarCarrito();
+  });
+});
+
+
+document.getElementById('boton-vaciar-carrito').addEventListener('click', function () {
+  if (carrito.length === 0) {
+    alert('El carrito ya está vacío');
+    return;
+  }
+
+  if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+    carrito = []; // Vacía el arreglo
+    actualizarCarrito(); // Refresca el DOM
+    localStorage.removeItem('carrito'); // Limpia el localStorage
+  }
+});
+
+/* Mostrar / ocultar modal */
+carritoIcono.addEventListener('click', () => modalCarrito.style.display = 'block');
+function cerrarCarrito() { modalCarrito.style.display = 'none'; }
+
+/* Actualizar listado */
+function actualizarCarrito() {
+  listaCarrito.innerHTML = '';
+  let total = 0;
+
+  carrito.forEach((item, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class="detalle-producto">
+        <span class="nombre-producto" title="${item.nombre}">${item.nombre}</span>
+      </div>
+      <div class="botones-cantidad">
+        <button onclick="disminuirCantidad(${i})">−</button>
+        <span class="cantidad">x${item.cantidad}</span>
+        <button onclick="aumentarCantidad(${i})">+</button>
+      </div>
+      <span class="precio-item">Q${(item.precio * item.cantidad).toFixed(2)}</span>
+      <button class="boton-eliminar" onclick="eliminarDelCarrito(${i})">X</button>
+    `;
+    listaCarrito.appendChild(li);
+    total += item.precio * item.cantidad;
+  });
+
+  totalCarritoSpan.textContent = total.toFixed(2);
+  contadorCarrito.textContent = carrito.reduce((s, i) => s + i.cantidad, 0);
+  guardarCarrito();
+}
+
+/* Botones +  −  X */
+function aumentarCantidad(i) {
+  carrito[i].cantidad++;
+  actualizarCarrito();
+}
+function disminuirCantidad(i) {
+  carrito[i].cantidad--;
+  if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+  actualizarCarrito();
+}
+function eliminarDelCarrito(i) {
+  carrito.splice(i, 1);
+  actualizarCarrito();
+}
+
+/* Enviar a WhatsApp */
+function enviarPedidoPorWhatsApp() {
+  if (carrito.length === 0) {
+    alert('Tu carrito está vacío');
+    return;
+  }
+
+  const nombreCliente = nombreClienteIn.value.trim();
+  if (!nombreCliente) {
+    alert('Por favor ingresa tu nombre');
+    return;
+  }
+
+  let msg = `*Pedido de ${nombreCliente}:*%0A`;
+  carrito.forEach(it => {
+    msg += `- ${it.nombre} x${it.cantidad} (Q${(it.precio * it.cantidad).toFixed(2)})%0A`;
+  });
+  msg += `%0A*Total:* Q${totalCarritoSpan.textContent}`;
+
+  const numero = '502XXXXXXXX'; // Reemplaza con tu número
+  window.open(`https://wa.me/${numero}?text=${msg}`, '_blank');
+
+  // Limpia
+  carrito = [];
+  actualizarCarrito();
+  cerrarCarrito();
+  nombreClienteIn.value = '';
+  localStorage.removeItem('carrito');
+}
+
+// Cargar carrito al iniciar la página
+cargarCarrito();
+
+
+const icono = document.getElementById('carrito-icono');
+icono.classList.add('agregado');
+setTimeout(() => icono.classList.remove('agregado'), 300);
+</script>
+
+

@@ -1,0 +1,802 @@
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+   <nav>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AQUA-GT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  
+  <link rel="stylesheet" href="styles.css" />
+
+  
+
+
+  </head>
+  <!----------------------------------------------------------- HERO --------------------------------------------------------->
+ </nav>
+  <header class="hero">
+    <div class="texto-hero">
+      <h1><span class="rojo">*</span>AQUA-GT</h1>
+      <p>EXPERTOS EN PECES,<br />COMPROMETIDOS CONTIGO.</p>
+    </div>
+    <div class="pez">
+      <img src="img/Logo.jpg.png" alt="Pez con bandera" />
+    </div>
+  </header>
+
+  <body>
+  
+  <!-- -----------------------------------------------------MENÚ SUPERIOR------------------------------------------------------------------------------------------------------------------->
+  <nav>
+    <div class="nav-container">
+      
+      <button class="hamburger" id="hamburger">☰</button>
+      <ul class="nav-menu" id="nav-menu">
+
+      <li><a href="#" class="activo">Inicio</a></li>
+      <li><a href="Peces.html">Peces</a></li>
+      <li><a href="Plantas.html">Plantas</a></li>
+      <li><a href="#">Acuarios</a></li>
+      <li><a href="#">Accesorios</a></li> 
+      <li><a href="#">Alimentación</a></li>
+      <li><a href="#">Medicación</a></li>
+      <li><a href="#">Blog</a></li>
+      <li><a href="#">Contacto</a></li>
+
+      
+      </ul>
+    
+    </div>
+       
+
+
+
+<!-- --------------------------------------------------ICONO DEL CARRITO ------------------------------------------------------------>
+  <button id="carrito-icono" aria-label="Ver carrito">
+    🛒
+    <span id="contador-carrito">0</span>
+  </button>
+
+
+
+
+
+<!--------------------------------------------------- MODAL DEL CARRITO -------------------------------------------------------->
+<div id="modal-carrito" style="display:none;">
+  <h2>Tu Carrito</h2>
+  <ul id="lista-carrito"></ul>
+  <hr>
+  <p style="font-weight:bold;">Total: Q<span id="total-carrito">0.00</span></p>
+
+
+
+  <!----------------------------------------------- Nombre del cliente ---------------------------------------------------------------->
+  <label for="nombreCliente">Tu nombre:</label>
+  <input type="text" id="nombreCliente" placeholder="Escribe tu nombre"
+         style="margin-bottom:10px;display:block;width:100%;padding:8px;border-radius:6px;border:1px solid #ccc;">
+
+<!-- Botón: Finalizar pedido -->
+<button onclick="enviarPedidoPorWhatsApp()"
+        style="margin-top:10px;background:#28a745;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Finalizar pedido por WhatsApp
+</button>
+
+<!-- Botón: Vaciar carrito -->
+<button id="boton-vaciar-carrito"
+        style="margin-top:10px;background:#001427;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Vaciar carrito
+</button>
+
+<!-- Botón: Cerrar -->
+<button onclick="cerrarCarrito()"
+        style="margin-top:10px;background:#dc3545;color:#fff;border:none;padding:10px 15px;cursor:pointer;width:100%;">
+  Cerrar
+</button>
+</div>
+
+    </ul>
+  </nav>
+
+    <!-- ESTILOS DEL MODAL Y CARRITO -->
+  <style>
+  #lista-carrito li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap:5px;
+    padding: 6px 0;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .detalle-producto {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+  }
+
+.nombre-producto {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 150px;
+  display: inline-block;
+  text-align: left;
+}
+
+  .botones-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .botones-cantidad button {
+    background: #f0f0f0;
+    border: none;
+    padding: 3px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .precio-item {
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  .boton-eliminar {
+    background: red;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .btn-comprar {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+}
+.btn-comprar:hover {
+  background-color: #0056b3;
+}
+
+
+
+  </style>
+<script>
+
+/* ----------  FILTRO DE CATEGORÍAS  ---------- */
+const botonesFiltro = document.querySelectorAll('.filtros button');
+const productos     = document.querySelectorAll('.producto');
+
+botonesFiltro.forEach(btn => {
+  btn.addEventListener('click', () => {
+    botonesFiltro.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cat = btn.getAttribute('data-categoria');
+    productos.forEach(prod => {
+      const catProd = prod.getAttribute('data-categoria');
+      prod.style.display = (cat === 'todos' || cat === catProd) ? 'flex' : 'none';
+    });
+  });
+});
+
+
+
+/* -------------------------------------------------------------------  CARRITO  ----------------------------------------------------------------------------------------------------- */
+const carritoIcono      = document.getElementById('carrito-icono');
+const modalCarrito      = document.getElementById('modal-carrito');
+const listaCarrito      = document.getElementById('lista-carrito');
+const totalCarritoSpan  = document.getElementById('total-carrito');
+const contadorCarrito   = document.getElementById('contador-carrito');
+const nombreClienteIn   = document.getElementById('nombreCliente');
+
+let carrito = [];
+
+// Cargar carrito guardado en localStorage
+function cargarCarrito() {
+  const carritoGuardado = localStorage.getItem('carrito');
+  if (carritoGuardado) {
+    carrito = JSON.parse(carritoGuardado);
+  } else {
+    carrito = [];
+  }
+  actualizarCarrito();
+}
+
+// Guardar carrito en localStorage
+function guardarCarrito() {
+  localStorage.setItem('carrito', JSON.stringify(carrito));
+}
+
+/* Agregar al carrito */
+document.querySelectorAll('.producto button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const prod = btn.closest('.producto');
+    const nombre = prod.querySelector('h3').textContent.trim();
+    const precio = parseFloat(
+      prod.querySelector('.precio').textContent.replace(/[^\d.]/g, '')
+    );
+
+    const item = carrito.find(p => p.nombre === nombre);
+    if (item) {
+      item.cantidad++;
+    } else {
+      carrito.push({ nombre, precio, cantidad: 1 });
+    }
+    actualizarCarrito();
+    guardarCarrito();
+  });
+});
+
+document.getElementById('boton-vaciar-carrito').addEventListener('click', function () {
+  if (carrito.length === 0) {
+    alert('El carrito ya está vacío');
+    return;
+  }
+
+  if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+    carrito = []; // Vacía el arreglo
+    actualizarCarrito(); // Refresca el DOM
+    localStorage.removeItem('carrito'); // Limpia el localStorage
+  }
+});
+
+/* Mostrar / ocultar modal */
+carritoIcono.addEventListener('click', () => modalCarrito.style.display = 'block');
+function cerrarCarrito() { modalCarrito.style.display = 'none'; }
+
+/* Actualizar listado */
+function actualizarCarrito() {
+  listaCarrito.innerHTML = '';
+  let total = 0;
+
+  carrito.forEach((item, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div class="detalle-producto">
+        <span class="nombre-producto" title="${item.nombre}">${item.nombre}</span>
+      </div>
+      <div class="botones-cantidad">
+        <button onclick="disminuirCantidad(${i})">−</button>
+        <span class="cantidad">x${item.cantidad}</span>
+        <button onclick="aumentarCantidad(${i})">+</button>
+      </div>
+      <span class="precio-item">Q${(item.precio * item.cantidad).toFixed(2)}</span>
+      <button class="boton-eliminar" onclick="eliminarDelCarrito(${i})">X</button>
+    `;
+    listaCarrito.appendChild(li);
+    total += item.precio * item.cantidad;
+  });
+
+  totalCarritoSpan.textContent = total.toFixed(2);
+  contadorCarrito.textContent = carrito.reduce((s, i) => s + i.cantidad, 0);
+  guardarCarrito();
+}
+
+/* Botones +  −  X */
+function aumentarCantidad(i) {
+  carrito[i].cantidad++;
+  actualizarCarrito();
+}
+function disminuirCantidad(i) {
+  carrito[i].cantidad--;
+  if (carrito[i].cantidad <= 0) carrito.splice(i, 1);
+  actualizarCarrito();
+}
+function eliminarDelCarrito(i) {
+  carrito.splice(i, 1);
+  actualizarCarrito();
+}
+
+/* Enviar a WhatsApp */
+function enviarPedidoPorWhatsApp() {
+  if (carrito.length === 0) {
+    alert('Tu carrito está vacío');
+    return;
+  }
+
+  const nombreCliente = nombreClienteIn.value.trim();
+  if (!nombreCliente) {
+    alert('Por favor ingresa tu nombre');
+    return;
+  }
+
+  let msg = `*Pedido de ${nombreCliente}:*%0A`;
+  carrito.forEach(it => {
+    msg += `- ${it.nombre} x${it.cantidad} (Q${(it.precio * it.cantidad).toFixed(2)})%0A`;
+  });
+  msg += `%0A*Total:* Q${totalCarritoSpan.textContent}`;
+
+  const numero = '50242285137'; // Reemplaza con tu número
+  window.open(`https://wa.me/${42285137}?text=${msg}`, '_blank');
+
+  // Limpia
+  carrito = [];
+  actualizarCarrito();
+  cerrarCarrito();
+  nombreClienteIn.value = '';
+  localStorage.removeItem('carrito');
+}
+
+// Cargar carrito al iniciar la página
+cargarCarrito();
+
+
+</script>
+
+
+
+
+  <!-- ------------------------------------------------CATEGORÍAS ---------------------------------------------------------->
+<section class="categorias">
+  <h2>Categorías</h2>
+  
+  <div class="contenedor-categorias">
+
+    <a href="Peces.html" class="categoria-link">
+      <img src="img/fish.png" alt="Peces" />
+      <h3>Peces</h3>
+    </a>
+
+   <a href="Plantas.html" class="categoria-link">
+      <img src="img/seaweed.png" alt="Plantas" />
+      <h3>Plantas</h3>
+    </a>
+
+   <a href="Acuarios.html" class="categoria-link">
+      <img src="img/aquarium.png" alt="Acuarios" />
+      <h3>Acuarios</h3>
+     </a>
+
+    <a href="alimentos.html" class="categoria-link">
+      <img src="img/fish-food.png" alt="Alimentos" />
+      <h3>Alimentos</h3>
+    </a>
+
+  </div>
+</section>
+
+
+
+<!-- ------------------------------------------------PRODUCTOS DESTACADOS----------------------------------------------- -->
+<section id="productos-destacados" style="
+  position: relative;
+  padding: 50px 20px;
+  background-image: url('img/fondo-acuario.png');
+  background-size: cover;
+  background-position: center;
+  color: white;
+  overflow: hidden;
+">
+
+  <div style="
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 70, 150, 0.4); /* azul semitransparente */
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1;
+    pointer-events: none; /* evita bloquear clicks */
+  "></div>
+
+  <h2 style="text-align:center;
+           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           position: relative;
+           z-index: 2;
+           font-size: 2rem;
+           font-weight: bold;">
+  Productos Destacados
+</h2>
+
+  <div class="galeria-productos" style="
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+    z-index: 2;
+  ">
+
+
+    <!----------------------- Producto 1 ------------------------------------->
+    <div class="producto" style="
+      background: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 220px;
+      text-align: center;
+      padding: 20px;
+      margin: 20px 0;
+    ">
+
+          <img src="img/Betta-Cola-de-Corona-removebg-preview.png" alt="Pez Betta" style="width: 100%; border-radius: 10px;" />
+      <h3 style="font-size: 1.1rem; margin: 10px 0 5px;">Pez Betta Corona</h3>
+      <p style="color: #007BFF; font-weight: bold;">Q95.00</p>
+<a href="peces/bettacorona.html" style="display: block; width: fit-content; margin: 10px auto 0; text-decoration: none;">
+  <button style="
+    background: #007BFF;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  ">Ver más</button>
+</a>
+
+    </div>
+
+        <!-- ----------------Producto 2 ---------------->
+    <div class="producto" style="
+      background: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 220px;
+      text-align: center;
+      padding: 20px;
+      margin: 20px 0;
+    ">
+<img src="img/vallisneria-asiatica-removebg-preview.png" alt="Valisneria" style="width: 100%; border-radius: 10px;" />
+<h3 style="font-size: 1.1rem; margin: 10px 0 5px;">Valisneria</h3>
+<p style="color: #007BFF; font-weight: bold;">Q15.00</p>
+
+<a href="Plantas.html" style="display: block; width: fit-content; margin: 10px auto 0; text-decoration: none;">
+  <button style="
+    background: #007BFF;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  ">Ver más</button>
+</a>
+ </div>
+
+        <!-- ---------------Producto 3 ------------------------>
+    <div class="producto" style="
+      background: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 220px;
+      text-align: center;
+      padding: 20px;
+      margin: 20px 0;
+    ">
+      <img src="img/alimentación-tipos.png" alt="Alimento" style="width: 100%; border-radius: 10px;" />
+      <h3 style="font-size: 1.1rem; margin: 10px 0 5px;">Alimento</h3>
+      <p style="color: #007BFF; font-weight: bold;">Q30.00</p>
+      
+<a href="alimentos.html" style="display: block; width: fit-content; margin: 10px auto 0; text-decoration: none;">
+  <button style="
+    background: #007BFF;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  ">Ver más</button>
+  </a>
+    </div>
+
+    <!-- --------------------------Producto 4 ----------------------------->
+    <div class="producto" style="
+      background: white;
+      color: black;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      width: 220px;
+      text-align: center;
+      padding: 20px;
+      margin: 20px 0;
+    ">
+      <img src="img/acuario.png" alt="Acuario Pequeño" style="width: 100%; border-radius: 10px;" />
+      <h3 style="font-size: 1.1rem; margin: 10px 0 5px;">Acuario Pequeño</h3>
+      <p style="color: #007BFF; font-weight: bold;">Q120.00</p>
+      
+  <a href="alimentos.html" style="display: block; width: fit-content; margin: 10px auto 0; text-decoration: none;">
+  <button style="
+    background: #007BFF;
+    border: none;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+  ">Ver más</button>
+  </a>
+
+  </div>
+</section>
+
+
+<!-- ---------------------------------------------Ofertas y Promociones ------------------------------------------------------------------------>
+<section class="promociones-modernas">
+  <h2>🎉 Ofertas y Promociones</h2>
+  <div class="contenedor-promos">
+
+        <!-- Promo 1 -->
+    <div class="tarjeta-promo">
+      <div class="img-contenedor">
+        <img src="img/bettasplenda-removebg-preview.png" alt="Betta Velo">
+        <span class="etiqueta-descuento">-30%</span>
+      </div>
+      <h3>Betta Velo</h3>
+      <p class="precio"><del>Q70.00</del> <strong>Q50.00</strong></p>
+      <p class="descripcion">¡Aprovecha esta semana!</p>
+      
+      <a href="Peces/bettavelo.html" class="btn-comprar">Comprar ahora</a>
+      
+    </div>
+
+
+        <!-- Promo 2 --> 
+    <div class="tarjeta-promo">
+      <div class="img-contenedor">
+        <img src="img/tretrapond.png" alt="Comida para peces">
+        <span class="etiqueta-descuento">-30%</span>
+      </div>
+      <h3>Combo de Comida</h3>
+      <p class="precio"><del>Q50.00</del> <strong>Q35.00</strong></p>
+      <p class="descripcion">Incluye 2 variedades</p>
+
+      <a href="tetrapoun.html" class="btn-comprar">Comprar ahora</a>
+    </div>
+
+
+        <!-- Promo 3 -->
+    <div class="tarjeta-promo">
+      <div class="img-contenedor">
+        <img src="img/amazonica-removebg-preview.png" alt="3x2 Plantas">
+        <span class="etiqueta-descuento">3x2</span>
+      </div>
+      <h3>Plantas Acuáticas</h3>
+      <p class="precio"><strong style="color:red;">Llévate 3 y paga 2</strong></p>
+      <p class="descripcion">Válido hasta fin de mes</p>
+      <a href="espadamazonica.html" class="btn-comprar">Comprar ahora</a>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- --------------------------------------------- CONTACTOS ----------------------------------------------------------------------->
+ <section class="contacto-rapido">
+  <div class="contenido-contacto">
+    <h2>¿Tienes dudas o quieres hacer un pedido rápido?</h2>
+    <p>Estamos aquí para ayudarte. Escríbenos al instante por el canal que prefieras:</p>
+
+    <div class="botones-contacto">
+      <a href="https://wa.me/50242285137" target="_blank" class="btn-contacto whatsapp">
+        📱 WhatsApp
+      </a>
+      <a href="https://m.me/tuusuario" target="_blank" class="btn-contacto messenger">
+        💬 Messenger
+      </a>
+      <a href="tel:+50242285137" class="btn-contacto llamada">
+        ☎️ Llamar
+      </a>
+      <a href="mailto:contacto@tutienda.com" class="btn-contacto email">
+        ✉️ Correo
+      </a>
+    </div>
+  </div>
+</section>
+
+<!------------------------------------------- BENEFICIOS / POR QUÉ ELEGIRNOS ---------------------------------------------->
+
+<section class="beneficios">
+  <h2>¿Por qué elegir AQUA-GT?</h2>
+  <div class="beneficios-contenedor">
+    <div class="beneficio">
+      <img src="img/shield.png" alt="Calidad Garantizada">
+      <h3>Calidad Garantizada</h3>
+      <p>Seleccionamos peces saludables y productos de primera para asegurar lo mejor para tu acuario.</p>
+    </div>
+    <div class="beneficio">
+      <img src="img/delivery-insurance.png" alt="Envíos Seguros">
+      <h3>Envíos Seguros</h3>
+      <p>Entregas rápidas y seguras, con empaque especializado para peces y plantas.</p>
+    </div>
+    <div class="beneficio">
+      <img src="img/24-hours-support.png" alt="Soporte Experto">
+      <h3>Soporte Experto</h3>
+      <p>Te acompañamos antes y después de tu compra con asesoría personalizada.</p>
+    </div>
+  </div>
+</section>
+
+<!------------------------------------------------- NOSOTROS --------------------------------------------------------------->
+<section class="nosotros" style="position: relative; background-image: url('img/fondo-acuario.png'); background-size: cover; background-position: center; color: white; padding: 60px 20px; overflow: hidden;">
+  <!-- Overlay azul semi-transparente con blur -->
+  <div style="
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 51, 102, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 0;
+  "></div>
+  
+  <div style="position: relative; max-width: 900px; margin: 0 auto; text-align: center; margin-bottom: 40px; z-index: 1;">
+    <h2 style="font-size: 2.5rem; margin-bottom: 15px;">Nosotros</h2>
+    <p style="font-size: 1.1rem; max-width: 600px; margin: 0 auto;">
+      En AQUA-GT somos apasionados por los acuarios. Te ayudamos a construir ecosistemas únicos con peces saludables, plantas vivas y productos seleccionados con cuidado.
+    </p>
+  </div>
+  
+  <div style="position: relative; max-width: 900px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; z-index: 1;">
+    
+    <div style="background: white; color: #001427; border-radius: 15px; padding: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); flex: 1 1 250px; min-width: 250px; text-align: center;">
+      <div style="font-size: 3rem; color: #007BFF; margin-bottom: 15px;">🎯</div>
+      <h3 style="margin-bottom: 15px;">Misión</h3>
+      <p style="text-align: justify;">Nuestra misión es ofrecer productos y servicios de alta calidad para los amantes de los acuarios, promoviendo un cuidado responsable y sustentable.</p>
+    </div>
+    
+    <div style="background: white; color: #001427; border-radius: 15px; padding: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); flex: 1 1 250px; min-width: 250px; text-align: center;">
+      <div style="font-size: 3rem; color: #007BFF; margin-bottom: 15px;">👁️‍🗨️</div>
+      <h3 style="margin-bottom: 15px;">Visión</h3>
+      <p style="text-align: justify;">Ser la tienda líder en el mercado nacional, reconocida por la excelencia en atención, variedad y compromiso ambiental.</p>
+    </div>
+    
+    <div style="background: white; color: #001427; border-radius: 15px; padding: 30px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); flex: 1 1 250px; min-width: 250px; text-align: center;">
+      <div style="font-size: 3rem; color: #007BFF; margin-bottom: 15px;">💎</div>
+      <h3 style="margin-bottom: 15px;">Valores</h3>
+      <ul style="padding-left: 20px; margin: 0; text-align: left; display: inline-block;">
+        <li>Calidad</li>
+        <li>Compromiso</li>
+        <li>Sustentabilidad</li>
+        <li>Confianza</li>
+        <li>Innovación</li>
+      </ul>
+    </div>
+    
+  </div>
+</section>
+
+
+<!----------------------------------------- TESTIMONIOS DE CLIENTES ------------------------------------------------------->
+<section class="testimonios">
+  <h2>Testimonios de Clientes</h2>
+  <div class="carrusel-testimonios">
+    <div class="slide active">
+      <img src="img/cliente 1.png" alt="Cliente 1">
+      <p>"Excelente calidad de peces y el empaque llegó perfecto. ¡Muy recomendado!"</p>
+      <h4>- Carla López</h4>
+    </div>
+    <div class="slide">
+      <img src="img/cliente2.png" alt="Cliente 2">
+      <p>"Mis plantas acuáticas llegaron vivas y sanas. Volveré a comprar sin duda."</p>
+      <h4>- Andrés Gómez</h4>
+    </div>
+    <div class="slide">
+      <img src="img//cliente3.png" alt="Cliente 3">
+      <p>"El acuario está hermoso y me asesoraron súper bien. Servicio 10/10."</p>
+      <h4>- Daniela Ruiz</h4>
+    </div>
+  </div>
+  <div class="controles">
+    <button onclick="moverSlide(-1)">‹</button>
+    <button onclick="moverSlide(1)">›</button>
+  </div>
+</section>
+<script>
+  let slideIndex = 0;
+  const slides = document.querySelectorAll(".slide");
+
+  function mostrarSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.remove("active");
+      if (i === index) slide.classList.add("active");
+    });
+  }
+
+  function moverSlide(dir) {
+    slideIndex += dir;
+    if (slideIndex >= slides.length) slideIndex = 0;
+    if (slideIndex < 0) slideIndex = slides.length - 1;
+    mostrarSlide(slideIndex);
+  }
+
+  // Mostrar el primero por defecto
+  mostrarSlide(slideIndex);
+  
+</script>
+
+
+
+
+
+<!-------------------------------------------------- PARTE INFERIOR  ------------------------------------------------------->
+<footer style="
+  background-color: #001427;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+">
+  <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px;">
+
+    <!-- Información -->
+    <div style="flex: 1 1 250px; text-align: left;">
+      <h3 style="color: #00BFFF;">AQUA-GT</h3>
+      <p style="margin: 10px 0;">Tu tienda de peces, acuarios y alimentos.</p>
+      <p><i class="fas fa-map-marker-alt"></i> Guatemala</p>
+      <p><i class="fas fa-phone-alt"></i> +502 1234-5678</p>
+      <p><i class="fas fa-envelope"></i> contacto@aqua-gt.com</p>
+    </div>
+
+    <!-- Enlaces -->
+    <div style="flex: 1 1 150px; text-align: left;">
+      <h4 style="margin-bottom: 10px;">Enlaces</h4>
+      <ul style="list-style: none; padding: 0;">
+        <li><a href="#nosotros" style="color: white; text-decoration: none;">Nosotros</a></li>
+        <li><a href="#productos-destacados" style="color: white; text-decoration: none;">Productos</a></li>
+        <li><a href="#categorias" style="color: white; text-decoration: none;">Categorías</a></li>
+        <li><a href="#contacto" style="color: white; text-decoration: none;">Contacto</a></li>
+      </ul>
+    </div>
+
+    <!-- Redes Sociales -->
+    <div style="flex: 1 1 150px; text-align: left;">
+      <h4 style="margin-bottom: 10px;">Síguenos</h4>
+      <p><a href="#" style="color: #00BFFF; text-decoration: none;"><i class="fab fa-facebook-f"></i> Facebook</a></p>
+      <p><a href="#" style="color: #00BFFF; text-decoration: none;"><i class="fab fa-instagram"></i> Instagram</a></p>
+      <p><a href="#" style="color: #00BFFF; text-decoration: none;"><i class="fab fa-tiktok"></i> TikTok</a></p>
+    </div>
+  </div>
+
+  <div style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 15px;">
+    <p style="margin: 0;">&copy; 2025 AQUA-GT. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navMenu = document.getElementById('nav-menu');
+
+  // Toggle del menú
+  hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+  });
+
+  // Cierra el menú al hacer clic en un enlace
+  document.querySelectorAll('.nav-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      navMenu.classList.remove('active');
+    });
+  });
+
+  // Cierra el menú al hacer clic fuera de él
+  document.addEventListener('click', (event) => {
+    if (!navMenu.contains(event.target) && !hamburger.contains(event.target)) {
+      navMenu.classList.remove('active');
+    }
+  });
+
+  
+</script>
+
+
+
+
+
